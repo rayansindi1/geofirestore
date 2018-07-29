@@ -1,9 +1,0 @@
-## Folders
-src
-test
-.rpt2_cache
-
-## Files
-.gitignore
-tsconfig.json
-tslint.json
