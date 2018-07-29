@@ -1,3 +1,7 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 /**
  * Creates a GeoCallbackRegistration instance.
  */
@@ -645,7 +649,7 @@ var GeoFirestoreQuery = /** @class */ (function () {
             this._locationsTracked.forEach(function (locationMap, key) {
                 if (typeof locationMap !== 'undefined' && locationMap.isInQuery) {
                     var keyCallback = callback;
-                    keyCallback(key, locationMap.document, locationMap.distanceFromCenter);
+                    keyCallback(key, locationMap.document, locationMap.distanceFromCenter, locationMap.snapshot);
                 }
             });
         }
@@ -727,7 +731,8 @@ var GeoFirestoreQuery = /** @class */ (function () {
         var data = (locationDataSnapshot.exists) ? locationDataSnapshot.data() : null;
         var document = (data && validateGeoFirestoreObject(data)) ? data.d : null;
         var location = (data && validateLocation(data.l)) ? data.l : null;
-        this._updateLocation(geoFirestoreGetKey(locationDataSnapshot), location, document);
+        var snapshot = locationDataSnapshot;
+        this._updateLocation(geoFirestoreGetKey(locationDataSnapshot), location, document, null, snapshot);
     };
     /**
      * Callback for child changed events
@@ -803,13 +808,13 @@ var GeoFirestoreQuery = /** @class */ (function () {
      * @param document The document from the GeoFirestore Collection.
      * @param distanceFromCenter The distance from the center or null.
      */
-    GeoFirestoreQuery.prototype._fireCallbacksForKey = function (eventType, key, document, distanceFromCenter) {
+    GeoFirestoreQuery.prototype._fireCallbacksForKey = function (eventType, key, document, distanceFromCenter, snapshot) {
         this._callbacks[eventType].forEach(function (callback) {
             if (typeof document === 'undefined' || document === null) {
                 callback(key, null, null);
             }
             else {
-                callback(key, document, distanceFromCenter);
+                callback(key, document, distanceFromCenter, snapshot);
             }
         });
     };
@@ -983,7 +988,7 @@ var GeoFirestoreQuery = /** @class */ (function () {
      * @param document The current Document from Firestore.
      * @param modified Flag for if document is a modified document/
      */
-    GeoFirestoreQuery.prototype._updateLocation = function (key, location, document, modified) {
+    GeoFirestoreQuery.prototype._updateLocation = function (key, location, document, modified, snapshot) {
         if (modified === void 0) { modified = false; }
         validateLocation(location);
         // Get the key and location
@@ -999,11 +1004,12 @@ var GeoFirestoreQuery = /** @class */ (function () {
             document: document,
             geohash: encodeGeohash(location),
             isInQuery: isInQuery,
-            location: location
+            location: location,
+            snapshot: snapshot
         });
         // Fire the 'key_entered' event if the provided key has entered this query
         if (isInQuery && !wasInQuery) {
-            this._fireCallbacksForKey('key_entered', key, document, distanceFromCenter);
+            this._fireCallbacksForKey('key_entered', key, document, distanceFromCenter, snapshot);
         }
         else if (isInQuery && oldLocation !== null && (location.latitude !== oldLocation.latitude || location.longitude !== oldLocation.longitude)) {
             this._fireCallbacksForKey('key_moved', key, document, distanceFromCenter);
