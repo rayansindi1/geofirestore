@@ -1181,6 +1181,9 @@ var GeoFirestore = /** @class */ (function () {
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return radius * c;
     };
+    GeoFirestore.encodeGeohash = function (location) {
+      return encodeGeohash(location);
+    };
     return GeoFirestore;
 }());
 
