@@ -1,5 +1,5 @@
 {
-  "name": "geofirestore",
+  "name": "geofirestore2",
   "description": "Location-based querying and filtering using Firebase's Firestore",
   "version": "0.0.2",
   "scripts": {
