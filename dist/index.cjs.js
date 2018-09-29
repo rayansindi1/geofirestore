@@ -1222,3 +1222,4 @@ var GeoFirestore = /** @class */ (function () {
 exports.GeoCallbackRegistration = GeoCallbackRegistration;
 exports.GeoFirestore = GeoFirestore;
 exports.GeoFirestoreQuery = GeoFirestoreQuery;
+exports.encodeGeohash = encodeGeohash;

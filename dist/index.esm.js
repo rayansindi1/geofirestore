@@ -1215,4 +1215,4 @@ var GeoFirestore = /** @class */ (function () {
     return GeoFirestore;
 }());
 
-export { GeoCallbackRegistration, GeoFirestore, GeoFirestoreQuery };
+export { GeoCallbackRegistration, GeoFirestore, GeoFirestoreQuery, encodeGeohash };
